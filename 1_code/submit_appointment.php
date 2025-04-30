@@ -12,6 +12,12 @@ if (!$isAdmin && !$isTutor) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Basic required fields check
+    if (empty($_POST['student_id']) || empty($_POST['appointment_type'])) {
+        echo "<script>alert('Missing required information: student ID or appointment type.'); window.history.back();</script>";
+        exit();
+    }
+
     $student_id = $_POST['student_id'];
     $appointment_type = $_POST['appointment_type'];
     $tutor_id = $isTutor ? $_SESSION['tutor_id'] : ($_POST['tutor_id'] ?? null); 
@@ -37,6 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if ($appointment_type === 'homeworkhelp') {
+            if (empty($_POST['Hw_time']) || empty($_POST['Hw_type'])) {
+                echo "<script>alert('Please fill out all required Homework Help fields.'); window.history.back();</script>";
+                exit();
+            }
+
             $Hw_time = $_POST['Hw_time'];
             $Hw_type = $_POST['Hw_type'];
 
@@ -52,6 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $pdo->prepare("INSERT INTO HomeworkHelp (StudentID, HwTime, HwType, TutorID) VALUES (?, ?, ?, ?)");
             $stmt->execute([$student_id, $Hw_time, $Hw_type, $tutor_id]);
         } elseif ($appointment_type === 'testprep') {
+            if (empty($_POST['testprep_time']) || empty($_POST['testprep_type']) || empty($_POST['tutor_location'])) {
+                echo "<script>alert('Please fill out all required Test Prep fields.'); window.history.back();</script>";
+                exit();
+            }
+
             $testprep_time = $_POST['testprep_time'];
             $testprep_type = $_POST['testprep_type'];
             $tutor_location = $_POST['tutor_location'];
@@ -68,6 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $pdo->prepare("INSERT INTO TestPrep (StudentID, PrepTime, PrepType, TutorLocation) VALUES (?, ?, ?, ?)");
             $stmt->execute([$student_id, $testprep_time, $testprep_type, $tutor_location]);
         } elseif ($appointment_type === 'meetup') {
+            if (empty($_POST['meetup_time']) || empty($_POST['meetup_reason'])) {
+                echo "<script>alert('Please fill out all required Meet Up fields.'); window.history.back();</script>";
+                exit();
+            }
+
             $meetup_time = $_POST['meetup_time'];
             $meetup_reason = $_POST['meetup_reason'];
 
@@ -87,8 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: success.php");
         exit();
     } catch (PDOException $e) {
-        echo "Database Error: " . $e->getMessage();
+        echo "<script>alert('Database Error: " . addslashes($e->getMessage()) . "'); window.history.back();</script>";
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo "<script>alert('Error: " . addslashes($e->getMessage()) . "'); window.history.back();</script>";
     }
 }
+?>

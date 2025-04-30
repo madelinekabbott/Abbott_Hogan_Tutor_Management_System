@@ -10,7 +10,7 @@ include 'header.php';
 
 $stmt = $pdo->prepare("SELECT * FROM Student");
 $stmt->execute();
-$student = $stmt->fetchAll();
+$students = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>

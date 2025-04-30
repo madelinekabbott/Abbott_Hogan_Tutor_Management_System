@@ -12,7 +12,7 @@ if (!isset($_SESSION['admin_id'])) {
 $stmt = $pdo->query("SELECT * FROM Student ORDER BY StudentName ASC");
 $students = $stmt->fetchAll();
 
-$Tutors = [];
+$tutors = [];
     $tutorStmt = $pdo->query("SELECT TutorID, TutorName FROM Tutor ORDER BY TutorName ASC");
     $tutors = $tutorStmt->fetchAll();
 ?>
@@ -106,7 +106,7 @@ $Tutors = [];
                     <option value="">-- Select a Tutor --</option>
                     <?php foreach ($tutors as $tutor): ?>
                         <option value="<?php echo htmlspecialchars($tutor['TutorID']); ?>">
-                            <?php echo htmlspecialchars($tutortest ['TutorName']); ?>
+                            <?php echo htmlspecialchars($tutor ['TutorName']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
